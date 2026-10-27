@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter , HTTPException, status
 from ..services.estudiante_service import EstudianteServicio
 from ..schemas.estudiante import Estudiante
 
@@ -10,15 +10,23 @@ estudianteServicio = EstudianteServicio()
 
 @rutasEstudiantes.post('/')
 def guardarEstudiante(estudianteNuevo):
-    return estudianteServicio.guardadEstudiante(estudianteNuevo)
+    try:
+        return estudianteServicio.guardadEstudiante(estudianteNuevo)
+    except Exception as e :
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR  ,detail= str(e))
 @rutasEstudiantes.get ('/')
 def mostrarEstudiante():
     return estudianteServicio.mostrarEstudiante()
 
 @rutasEstudiantes.put('/{id}')
 def actualizarEstudiante(id: int, estudianteActualizar:Estudiante):
-    return estudianteServicio.actualizarEstudiante(id, estudianteActualizar)
-    
+    try:
+        return estudianteServicio.actualizarEstudiante(id, estudianteActualizar)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=(e))
 @rutasEstudiantes.delete('/{id}')
 def aliminarEstudiante(id: int):
-    return estudianteServicio.eliminarEstudiante(id)
+    try:
+        return estudianteServicio.eliminarEstudiante(id)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
